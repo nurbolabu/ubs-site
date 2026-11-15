@@ -132,7 +132,7 @@ def accordion(page):
     left = ''.join(item(p, lang) for i, p in enumerate(TEAM) if i % 2 == 0)
     right = ''.join(item(p, lang) for i, p in enumerate(TEAM) if i % 2 == 1)
     single = ''.join(item(p, lang, '-m') for p in TEAM)
-    return f'''<section class="team-acc">
+    return f'''<section class="team-acc" id="team">
 <span class="team-acc__rings" aria-hidden="true"></span>
 <div class="container">
 <p class="team-acc__label" data-anim="fadeinright" data-anim-duration="2" data-anim-distance="20" data-anim-mobile="y">{ui['label']}</p>

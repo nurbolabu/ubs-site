@@ -109,6 +109,8 @@ def on_zero(page, n, rec, html, css):
     slug = page.slug
     scope = '#' + re.search(r'<section id="([^"]+)"', html).group(1)
     text = rec.get_text(' ')
+    if slug == 'index' and '+20' in text:
+        html = team_arrow(page, html, css, scope)
     if slug == 'about-ubs' and 'Safa Butrous' in text:
         html, css = founder_photo(page, html, css, scope)
     if n == 0 and (slug in S.SERVICES or slug in ('delivery', 'information-security')):
@@ -117,6 +119,25 @@ def on_zero(page, n, rec, html, css):
         if 'How We Work' in text:
             return S.service_detail(page, rec), ''
     return html, css
+
+
+ARROW = ('<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+         '<path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" '
+         'stroke-linecap="round" stroke-linejoin="round"/></svg>')
+
+
+def team_arrow(page, html, css, scope):
+    """Home, 'Who we are': the blue '+20' circle next to the team photos becomes an arrow
+    that leads to the team list on the About page. The arrow lives inside the circle itself,
+    so both always stay on one line with the photos."""
+    html = re.sub(r'<div class="el el--text (e\d+)"([^>]*)><div class="a">\+20</div></div>\n?', '', html)
+    # the small light-blue circle (the only round shape filled with #72d5ff)
+    circle = re.search(r'%s \.(e\d+) \.a\{border-radius:44px[^}]*#72d5ff' % re.escape(scope), css).group(1)
+    m = re.search(r'<div class="el el--shape (%s)"([^>]*)><div class="a"></div></div>' % circle, html)
+    link = ('<div class="el el--shape %s team-more"%s><a class="a" href="@@/about-ubs/#team" '
+            'aria-label="%s"><span class="team-more__in">%s</span></a></div>') % (
+        m.group(1), m.group(2), page.t('Our team'), ARROW)
+    return html[:m.start()] + link + html[m.end():]
 
 
 FOUNDER_PHOTO = '@/assets/img/founder.svg'  # replace with the real photo (e.g. founder.jpg)

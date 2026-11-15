@@ -506,8 +506,13 @@
     var items = els.filter(function (e) { return e.offsetParent !== null; }).map(function (e) {
       var m = e.className.match(/st-slide-\d+/);
       var eh = (e.getAttribute('data-eh') || '').split(',');
-      var h = e.offsetHeight;
       var hEn = parseFloat(eh[bp]);
+      var h = e.offsetHeight;
+      // an image that has not loaded yet (lazy) counts with its design height
+      if (h < 10 && /el--image\b/.test(e.className)) {
+        var img = e.querySelector('img');
+        h = hEn > 0 ? hEn : (img && img.getAttribute('height') ? +img.getAttribute('height') : e.offsetWidth);
+      }
       return {
         e: e, top: e.offsetTop, left: e.offsetLeft, w: e.offsetWidth, h: h,
         grow: hEn > 0 ? Math.max(0, h - hEn) : 0,
@@ -529,7 +534,9 @@
       return gap < 120;
     }
     var moved = false;
-    for (var pass = 0; pass < 2; pass++) {
+    // repeat until nothing changes: a row (button, photos, badge) settles on one shift
+    for (var pass = 0, changed = true; changed && pass < 8; pass++) {
+      changed = false;
       content.forEach(function (b, bi) {
         var shift = pass ? b.shift : 0;
         for (var ai = 0; ai < content.length; ai++) {
@@ -545,7 +552,8 @@
             shift = Math.max(shift, a.top + a.h + a.shift + 6 - b.top);
           }
         }
-        b.shift = Math.round(shift);
+        shift = Math.round(shift);
+        if (shift !== b.shift) { b.shift = shift; changed = true; }
       });
     }
     content.forEach(function (b) {
@@ -647,7 +655,7 @@
         if (changed) { clearTimeout(t); t = setTimeout(run, 80); }
       });
       secs.forEach(function (sec) {
-        Array.prototype.forEach.call(sec.querySelectorAll(':scope > .el--text'), function (e) { ro.observe(e); });
+        Array.prototype.forEach.call(sec.querySelectorAll(':scope > .el--text, :scope > .el--image'), function (e) { ro.observe(e); });
       });
     }
   }

@@ -339,3 +339,10 @@ html[lang="kk"] :is(.values__text,.clients__descr,.svc__p,.svc__result,.svc-card
   .acc__text{margin-bottom:15px}
 }
 html[lang="ru"] .acc__text,html[lang="kk"] .acc__text{-webkit-hyphens:auto;hyphens:auto}
+
+/* Home, 'Who we are': arrow to the team list */
+.el.team-more .a{position:relative;transition:background-color .2s,transform .2s}
+.team-more__in{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff}
+.el.team-more .a:hover{background-color:#00a0e3!important}
+.el.team-more .a:hover .team-more__in{transform:translateX(2px);transition:transform .2s}
+.team-acc{scroll-margin-top:70px}
