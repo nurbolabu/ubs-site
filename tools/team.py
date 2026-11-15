@@ -1,13 +1,14 @@
 """Team list with expandable quotes (About page), as on the original Tilda page.
 
-Photos are optional: put a square photo into docs/assets/img/team/ and write its file name
-into 'photo'. A person with a photo gets a round portrait next to the name and a larger
-photo inside the opened description; people without a photo keep the plain layout.
+Photos are optional: put a square photo (at least 240x240) into docs/assets/img/team/ and
+write its file name into 'photo'. A person with a photo gets a round portrait next to the name
+(80 px on computers, 72 on tablets, 56 on phones); people without a photo keep the plain layout.
+The current photos of the first four people are placeholders (stock / home page images).
 """
 
 TEAM = [
     {
-        'id': 'safa-butrous', 'photo': None,
+        'id': 'safa-butrous', 'photo': 'safa-butrous.jpg',
         'name': {'en': 'Safa Butrous', 'ru': 'Сафа Бутрус', 'kk': 'Сафа Бутрус'},
         'role': {'en': 'Founder', 'ru': 'Основатель', 'kk': 'Негізін қалаушы'},
         'text': {
@@ -17,7 +18,7 @@ TEAM = [
         },
     },
     {
-        'id': 'rula-haddad', 'photo': None,
+        'id': 'rula-haddad', 'photo': 'rula-haddad.jpg',
         'name': {'en': 'Rula Haddad', 'ru': 'Рула Хаддад', 'kk': 'Рула Хаддад'},
         'role': {'en': 'General Director', 'ru': 'Генеральный директор', 'kk': 'Бас директор'},
         'text': {
@@ -27,7 +28,7 @@ TEAM = [
         },
     },
     {
-        'id': 'samer-abu-laban', 'photo': None,
+        'id': 'samer-abu-laban', 'photo': 'samer-abu-laban.jpg',
         'name': {'en': 'Samer Abu-Laban', 'ru': 'Самер Абу-Лабан', 'kk': 'Самер Абу-Лабан'},
         'role': {'en': 'Site Division Manager', 'ru': 'Руководитель направления', 'kk': 'Бағыт жетекшісі'},
         'text': {
@@ -37,7 +38,7 @@ TEAM = [
         },
     },
     {
-        'id': 'yevgeniy-zaitsev', 'photo': None,
+        'id': 'yevgeniy-zaitsev', 'photo': 'yevgeniy-zaitsev.jpg',
         'name': {'en': 'Yevgeniy Zaitsev', 'ru': 'Евгений Зайцев', 'kk': 'Евгений Зайцев'},
         'role': {'en': 'Business Development Manager', 'ru': 'Менеджер по развитию бизнеса', 'kk': 'Бизнесті дамыту жөніндегі менеджер'},
         'text': {
@@ -116,11 +117,11 @@ def item(p, lang, suffix=''):
     name, role, text = p['name'][lang], p['role'][lang], p['text'][lang]
     pid = 'team-' + p['id'] + suffix
     photo = '@/assets/img/team/' + p['photo'] if p['photo'] else None
-    avatar = ('<img class="acc__avatar" src="%s" alt="" width="64" height="64" loading="lazy">' % photo) if photo else ''
-    big = ('<img class="acc__photo" src="%s" alt="%s" width="160" height="160" loading="lazy">' % (photo, esc(name))) if photo else ''
+    avatar = ('<img class="acc__avatar" src="%s" alt="%s" width="80" height="80" loading="lazy">'
+              % (photo, esc(name))) if photo else ''
     return f'''<li class="acc__item{' has-photo' if photo else ''}">
 <h3 class="acc__head"><button type="button" class="acc__btn" aria-expanded="false" aria-controls="{pid}">{avatar}<span class="acc__titles"><span class="acc__name">{esc(name)}</span><span class="acc__role">{esc(role)}</span></span><span class="acc__icon">{PLUS}</span></button></h3>
-<div class="acc__panel" id="{pid}" role="region" hidden><div class="acc__body">{big}<p class="acc__text">{esc(text)}</p></div></div>
+<div class="acc__panel" id="{pid}" role="region" hidden><div class="acc__body"><p class="acc__text">{esc(text)}</p></div></div>
 </li>'''
 
 
