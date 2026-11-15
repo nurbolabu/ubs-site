@@ -181,6 +181,9 @@ def build_page(slug, src, lang, shared_css):
                 zero_n += 1
             if is_header:
                 html = html.replace('<section', '<header', 1).replace('</section>', '</header>')
+                # the frosted background bar of the header (used by the phone header behaviour)
+                for cls in re.findall(r'#%s \.(e\d+)\{[^}]*backdrop-filter' % scope, css):
+                    html = re.sub(r'class="el el--shape %s"' % cls, 'class="el el--shape %s hdr-bg"' % cls, html)
                 html = C.header_extras(html, page)
                 header_done = True
             key = rid

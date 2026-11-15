@@ -202,12 +202,19 @@ def tiles(page, rec):
     return '<section class="tiles"><ul class="container tiles__grid">%s</ul></section>' % ''.join(cards)
 
 
+OFFICE = (43.258995, 76.936811)  # 86 Gogol St., Almaty (coordinates from the original Tilda map)
+
+
 def contact_map(page, rec):
+    """Ad-free OpenStreetMap (Leaflet, self-hosted) + links to 2GIS / Yandex for directions."""
     landline = '<a href="%s">%s</a><br>' % (LANDLINE[1], LANDLINE[0]) if LANDLINE else ''
-    src = ('https://yandex.ru/map-widget/v1/?ll=76.937960%2C43.263620&z=16.4&pt=76.937960,43.263620,pm2blm&lang='
-           + {'en': 'en_US', 'ru': 'ru_RU', 'kk': 'kk_KZ'}[page.lang])
+    lat, lng = OFFICE
+    gis = 'https://2gis.kz/almaty/geo/%s%%2C%s?m=%s%%2C%s%%2F17' % (lng, lat, lng, lat)
+    yandex = 'https://yandex.kz/maps/?pt=%s,%s&z=17&l=map' % (lng, lat)
     return f'''<section class="contact">
-<div class="contact__map" data-map-src="{src}" data-map-title="{page.t('UBS office on the map')}"></div>
+<div class="contact__map" data-map data-lat="{lat}" data-lng="{lng}" data-popup="UBS · {page.t('Almaty, 050000, 86 Gogol St.,<br>Office (800–806)')}" role="region" aria-label="{page.t('UBS office on the map')}">
+<div class="contact__routes"><a href="{gis}" target="_blank" rel="noopener">{page.t('Open in 2GIS')}</a><a href="{yandex}" target="_blank" rel="noopener">{page.t('Open in Yandex Maps')}</a></div>
+</div>
 <div class="contact__card">
 <h1 class="contact__title grad-title">{page.t('Contact us')}</h1>
 <p class="contact__text"><a href="{PHONE_HREF}">{PHONE}</a><br>{landline}<a href="mailto:{EMAIL}">{EMAIL}</a><br>{page.t('Almaty, 050000, 86 Gogol St.,<br>Office (800–806)')}</p>

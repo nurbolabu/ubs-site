@@ -356,7 +356,7 @@ def convert(rec, ctx, scope_id, overrides=None):
         if typ == 'text':
             body = ctx.text(clean_rich(inner_html(atom)), eid)
             plain = re.sub(r'<[^>]+>', ' ', body)
-            if len(plain.strip()) >= 110:
+            if len(plain.strip()) >= 110 and not any(c.startswith('st-slide') for c in custom):
                 attrs['class'] += ' el--para'
                 if rules[None].get('%s .%s' % (scope, cls), {}).get('text-align') == 'center':
                     attrs['class'] += ' is-center'

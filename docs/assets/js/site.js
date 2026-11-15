@@ -217,6 +217,17 @@
     }
     if (prev) prev.addEventListener('click', function () { go(current - 1 < 1 ? total : current - 1); });
     if (next) next.addEventListener('click', function () { go(current + 1 > total ? 1 : current + 1); });
+    // swipe left / right on phones and tablets
+    var hero = $('.st-slide-1').closest('.z'), x0 = null, y0 = 0;
+    hero.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+    hero.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+      x0 = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+        go(dx < 0 ? (current + 1 > total ? 1 : current + 1) : (current - 1 < 1 ? total : current - 1));
+      }
+    }, { passive: true });
     function go(n) {
       clearTimeout(timer);
       for (var i = 1; i <= total; i++) {
@@ -375,13 +386,14 @@
       next.addEventListener('click', function () { go(index + 1); });
       window.addEventListener('resize', function () { index = Math.min(index, maxIndex()); render(false); });
       var x0 = null;
-      track.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
-      track.addEventListener('touchend', function (e) {
+      var y0 = 0;
+      root.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+      root.addEventListener('touchend', function (e) {
         if (x0 === null) return;
-        var dx = e.changedTouches[0].clientX - x0;
-        if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1));
+        var dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) go(index + (dx < 0 ? 1 : -1));
         x0 = null;
-      });
+      }, { passive: true });
       root.addEventListener('mouseenter', function () { clearInterval(timer); });
       root.addEventListener('mouseleave', restart);
       render(false);
@@ -431,22 +443,48 @@
 
   /* ---------- Map: load the iframe only when it gets close to the viewport ---------- */
   function initMap() {
-    var map = $('[data-map-src]');
-    if (!map) return;
+    var box = $('[data-map]');
+    if (!box) return;
+    var root = document.documentElement.getAttribute('data-root') || '';
+    function addFile(tag, attrs, done) {
+      var el = document.createElement(tag);
+      for (var k in attrs) el.setAttribute(k, attrs[k]);
+      if (done) el.onload = done;
+      document.head.appendChild(el);
+    }
+    function draw() {
+      var L = window.L;
+      var ll = [parseFloat(box.getAttribute('data-lat')), parseFloat(box.getAttribute('data-lng'))];
+      var touch = window.matchMedia('(pointer: coarse)').matches;
+      var map = L.map(box, {
+        center: ll, zoom: 17, scrollWheelZoom: false, dragging: !touch, tap: false,
+        attributionControl: true, zoomControl: true
+      });
+      // on phones the page keeps scrolling with one finger; the map moves with two
+      if (touch) {
+        box.addEventListener('touchstart', function (e) {
+          if (e.touches.length > 1) map.dragging.enable(); else map.dragging.disable();
+        }, { passive: true });
+      }
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19, attribution: '&copy; OpenStreetMap'
+      }).addTo(map);
+      var icon = L.divIcon({ className: 'map-pin', html: '<span></span>', iconSize: [34, 44], iconAnchor: [17, 42], popupAnchor: [0, -38] });
+      L.marker(ll, { icon: icon, keyboard: false }).addTo(map)
+        .bindPopup(box.getAttribute('data-popup'));
+      map.attributionControl.setPrefix(false);
+    }
     function load() {
-      if (map.getAttribute('data-loaded')) return;
-      map.setAttribute('data-loaded', '1');
-      var f = document.createElement('iframe');
-      f.src = map.getAttribute('data-map-src');
-      f.title = map.getAttribute('data-map-title') || 'Map';
-      f.setAttribute('allowfullscreen', '');
-      map.appendChild(f);
+      if (box.getAttribute('data-loaded')) return;
+      box.setAttribute('data-loaded', '1');
+      addFile('link', { rel: 'stylesheet', href: root + 'assets/vendor/leaflet/leaflet.css' });
+      addFile('script', { src: root + 'assets/vendor/leaflet/leaflet.js' }, draw);
     }
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (en) {
         if (en[0].isIntersecting) { load(); io.disconnect(); }
-      }, { rootMargin: '300px' });
-      io.observe(map);
+      }, { rootMargin: '400px' });
+      io.observe(box);
     } else load();
   }
 
@@ -614,7 +652,18 @@
     }
   }
 
+  function initScrolled() {
+    var on = false;
+    function check() {
+      var y = window.pageYOffset > 10;
+      if (y !== on) { on = y; document.documentElement.classList.toggle('is-scrolled', y); }
+    }
+    check();
+    window.addEventListener('scroll', check, { passive: true });
+  }
+
   function init() {
+    initScrolled();
     initReflow();
     initAppear();
     initSbs();
