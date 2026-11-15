@@ -1,0 +1,78 @@
+/* UBS — base styles: reset, fonts, layout primitives used by every page. */
+
+@font-face{font-family:'TRYGrtsk';src:url('../fonts/31623734-TRYGrtsk-MediumTera-.woff') format('woff');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'TRYGrtsk';src:url('../fonts/36643139-TRYGrtsk-SemiBoldTer.woff') format('woff');font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:'TRYGrtsk';src:url('../fonts/64623134-TRYGrtsk-ExtraLightG.woff') format('woff');font-weight:300;font-style:normal;font-display:swap}
+@font-face{font-family:'Montserrat';src:url('../fonts/montserrat-cyrillic-ext.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:'Montserrat';src:url('../fonts/montserrat-cyrillic.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:'Montserrat';src:url('../fonts/montserrat-latin-ext.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Montserrat';src:url('../fonts/montserrat-latin.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:#fff;color:#000;font-family:'Montserrat',Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden}
+img{max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+ul,ol{margin-top:0}
+h1,h2,h3,h4,p{margin:0}
+:focus-visible{outline:2px solid #00a0e3;outline-offset:2px}
+.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Page fade-in on load (was the page-transition block). */
+body{animation:page-in .4s ease-out both}
+@keyframes page-in{from{opacity:0}to{opacity:1}}
+
+/* ===== Absolute-positioned sections (former Zero Blocks) ===== */
+.z{position:relative;width:100%;overflow:hidden;-webkit-text-size-adjust:100%}
+.z--visible{overflow:visible}
+.z__bg,.z__filter{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+.z__bg{z-index:0}
+.z__filter{z-index:1}
+.z--fixed{position:fixed;top:0;left:0;z-index:990}
+.z--fixed .z__bg,.z--fixed .z__filter{pointer-events:none}
+.z--fixed{pointer-events:none}
+.z--fixed .el{pointer-events:auto}
+.el{position:absolute;display:table}
+.el .a{display:table-cell;vertical-align:middle;width:100%}
+.el ul,.el ol{margin-bottom:0}
+.el a.a{text-decoration:none}
+.el .a__img{display:block;width:100%}
+.el--shape .a{background-repeat:no-repeat}
+
+/* Buttons */
+.el--button{display:block}
+.el--button .a{position:relative;display:flex;flex-direction:row;justify-content:center;align-items:center;box-sizing:border-box;width:100%;height:100%;overflow:hidden;text-decoration:none;cursor:pointer}
+.el--button .a::after{content:'';display:block;position:absolute;inset:0;pointer-events:none;opacity:0;z-index:-1}
+.btn__c{display:flex;flex-direction:row;align-items:center;justify-content:center;flex:0 1 auto;min-width:0}
+.btn__t{flex:1 1 0;text-overflow:ellipsis}
+.btn__i{flex:0 0 auto;position:relative}
+.btn__i::before{content:'';position:absolute;inset:0;display:block;background-image:var(--icon,none);background-position:center;background-size:contain;background-repeat:no-repeat}
+.btn__i--mask::before{background:currentColor;-webkit-mask:var(--icon,none) center/contain no-repeat;mask:var(--icon,none) center/contain no-repeat}
+.btn__b{position:absolute;inset:0;z-index:1;border-radius:inherit;transition-duration:inherit;transition-timing-function:inherit;pointer-events:none}
+
+/* Forms inside sections */
+.zf{display:flex;flex-direction:column;width:100%}
+.zf__input{display:block;width:100%;padding:0 20px;background:transparent;outline:none;-webkit-appearance:none;appearance:none}
+.zf__input:focus{box-shadow:0 0 0 2px rgba(255,255,255,.6)}
+.zf__input.is-error{box-shadow:0 0 0 1px #f95d51}
+.zf__btn{display:block;width:100%;cursor:pointer;transition:opacity .2s}
+.zf__btn:hover{opacity:.9}
+.zf__btn[disabled]{opacity:.6;cursor:default}
+.zf__hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.zf__msg{margin:12px 0 0;min-height:1em;color:#fff;font:400 14px/1.4 Arial,sans-serif}
+.zf__msg:empty{display:none}
+
+/* ===== Appear animations ===== */
+[data-anim]{opacity:0;transition-property:opacity,transform;transition-timing-function:ease}
+[data-anim].is-shown{opacity:1;transform:none!important}
+.is-anim-hidden{visibility:hidden}
+.is-anim-hidden.is-ready{visibility:visible}
+@media (max-width:1199px){[data-anim]:not([data-anim-mobile]){opacity:1;transform:none!important;transition:none}}
+@media (prefers-reduced-motion:reduce){
+  [data-anim]{opacity:1!important;transform:none!important;transition:none!important}
+  body{animation:none}
+  *{scroll-behavior:auto!important}
+}
+html{scroll-behavior:smooth}
+.el .a a{color:inherit;text-decoration:none}
