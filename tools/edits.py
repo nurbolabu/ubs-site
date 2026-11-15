@@ -72,6 +72,8 @@ def replace_text(text):
 
 
 EDITS = {
+    # Founder section removed: Safa Butrous is the first person of the team list
+    'about-ubs': {'skip': {'2626429403'}},
     # Certified Service Center card removed from the services page
     'ubs-services': {'skip': {'3350072703'}},
     # CEO + sales department after the contact card

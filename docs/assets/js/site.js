@@ -652,6 +652,40 @@
     }
   }
 
+  /* ---------- Team accordion ---------- */
+  function initAccordion() {
+    $$('.acc__btn').forEach(function (btn) {
+      var panel = document.getElementById(btn.getAttribute('aria-controls'));
+      btn.addEventListener('click', function () {
+        var open = btn.getAttribute('aria-expanded') !== 'true';
+        btn.setAttribute('aria-expanded', String(open));
+        if (reduceMotion) { panel.hidden = !open; return; }
+        if (open) {
+          panel.hidden = false;
+          var h = panel.scrollHeight;
+          panel.style.height = '0px';
+          panel.style.opacity = '0';
+          requestAnimationFrame(function () {
+            panel.style.height = h + 'px';
+            panel.style.opacity = '1';
+          });
+        } else {
+          panel.style.height = panel.scrollHeight + 'px';
+          requestAnimationFrame(function () {
+            panel.style.height = '0px';
+            panel.style.opacity = '0';
+          });
+        }
+        panel.addEventListener('transitionend', function done(e) {
+          if (e.propertyName !== 'height') return;
+          panel.removeEventListener('transitionend', done);
+          if (btn.getAttribute('aria-expanded') === 'true') panel.style.height = '';
+          else panel.hidden = true;
+        });
+      });
+    });
+  }
+
   function initScrolled() {
     var on = false;
     function check() {
@@ -664,6 +698,7 @@
 
   function init() {
     initScrolled();
+    initAccordion();
     initReflow();
     initAppear();
     initSbs();

@@ -302,3 +302,40 @@ html[lang="kk"] :is(.values__text,.clients__descr,.svc__p,.svc__result,.svc-card
   header.z .el.hdr-bg{top:0!important;height:66px!important;translate:none!important;opacity:0!important;transition:opacity .3s ease!important}
   html.is-scrolled header.z .el.hdr-bg{opacity:1!important}
 }
+
+/* ===== Team accordion (About) — as the original list, plus optional photos ===== */
+.team-acc{position:relative;overflow:hidden;padding:60px 0 60px;background:#fff}
+.team-acc__rings{position:absolute;left:50%;top:40px;width:1040px;height:1040px;margin-left:-520px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,transparent 179px,#d8f0f3 180px,transparent 181px,transparent 264px,#d8f0f3 265px,transparent 266px,transparent 349px,#d8f0f3 350px,transparent 351px,transparent 434px,#d8f0f3 435px,transparent 436px,transparent 518px,#d8f0f3 519px,transparent 520px)}
+.team-acc .container{position:relative}
+.team-acc__label{margin-bottom:24px;color:#26262b;font:400 12px/1.5 Arial,sans-serif;text-align:center}
+.team-acc__title{margin-bottom:60px;font-size:70px;line-height:1.05;letter-spacing:-1px;text-align:center;text-transform:uppercase}
+.acc{display:grid;grid-template-columns:1fr 1fr;column-gap:40px;align-items:start}
+.acc__col{margin:0;padding:0;list-style:none}
+.acc__head{margin:0;font:inherit}
+.acc__btn{position:relative;display:flex;align-items:center;gap:20px;width:100%;padding:27px 50px 27px 0;text-align:left;color:#26262b;cursor:pointer}
+.acc__titles{display:block;max-width:400px}
+.acc__name{display:block;font:400 30px/1.5 Arial,sans-serif;text-transform:uppercase}
+.acc__role{display:block;margin-top:2px;font:400 14px/1.5 Arial,sans-serif;text-transform:uppercase}
+.acc__avatar{flex:0 0 64px;width:64px;height:64px;border-radius:50%;object-fit:cover;box-shadow:0 8px 24px rgba(0,119,255,.12)}
+.acc__icon{position:absolute;top:50%;right:0;width:40px;height:40px;margin-top:-20px;display:flex;align-items:center;justify-content:center;color:#00a0e3;transition:transform .3s ease-in-out}
+.acc__btn[aria-expanded="true"] .acc__icon{transform:rotate(-45deg)}
+.acc__btn:hover .acc__name{color:#00a0e3;transition:color .2s}
+.acc__panel{overflow:hidden;transition:height .3s ease-in-out,opacity .3s ease-in-out}
+.acc__body{display:flex;gap:24px;align-items:flex-start;padding:0 0 20px}
+.acc__photo{flex:0 0 160px;width:160px;height:160px;border-radius:12px;object-fit:cover}
+.acc__text{max-width:450px;margin:0 0 20px;color:#26262b;font:400 14px/1.55 Arial,sans-serif;text-align:justify}
+@media (max-width:1199px){.team-acc__title{font-size:50px}.acc__name{font-size:26px}}
+.acc--narrow{display:none}
+@media (max-width:959px){.acc--wide{display:none}.acc--narrow{display:block}.team-acc__title{font-size:40px;margin-bottom:30px}.team-acc__rings{width:700px;height:700px;margin-left:-350px;transform:scale(.7);transform-origin:top center}}
+@media (max-width:639px){
+  .team-acc{padding:45px 0 40px}
+  .acc__btn{padding:15px 50px 14px 0;gap:14px}
+  .acc__name{font-size:20px;line-height:1.35}
+  .acc__role{font-size:12px}
+  .acc__avatar{flex-basis:48px;width:48px;height:48px}
+  .acc__body{flex-direction:column;gap:14px;padding-bottom:10px}
+  .acc__photo{width:120px;height:120px;flex-basis:auto}
+  .acc__text{margin-bottom:15px}
+}
+html[lang="ru"] .acc__text,html[lang="kk"] .acc__text{-webkit-hyphens:auto;hyphens:auto}

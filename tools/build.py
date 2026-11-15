@@ -19,6 +19,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import components as C  # noqa: E402
 import edits  # noqa: E402
 import services as S  # noqa: E402
+import team  # noqa: E402
 import zero  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -217,7 +218,9 @@ def build_page(slug, src, lang, shared_css):
             page.body.append(C.partner_logos(page, rec))
         elif typ == '959':
             page.body.append(C.clients(page, rec))
-        elif typ in ('360', '131', '270', '585'):
+        elif typ == '585':
+            page.body.append(team.accordion(page))
+        elif typ in ('360', '131', '270'):
             pass
         else:
             print('  ! unhandled block', typ, rid, 'on', src)
