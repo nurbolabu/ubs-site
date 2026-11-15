@@ -116,13 +116,16 @@ def convert_css(rec, rec_id, elem_cls, scope, ctx):
                 if not sels[s]:
                     del sels[s]
     # remove declarations identical to the base rule (Tilda repeats boilerplate)
-    base = rules[None]
+    # (compared with the value that is in effect at that size, i.e. after the larger breakpoints)
+    eff = {sel: dict(d) for sel, d in rules[None].items()}
     for m in MEDIA_ORDER[3:]:
         for sel, decls in list(rules[m].items()):
-            b = base.get(sel, {})
+            cur = eff.setdefault(sel, {})
             for p in list(decls):
-                if b.get(p) == decls[p] and p not in ('left', 'top', 'width', 'height', 'display'):
+                if cur.get(p) == decls[p] and p not in ('left', 'top', 'width', 'height', 'display'):
                     del decls[p]
+                else:
+                    cur[p] = decls[p]
             if not decls:
                 del rules[m][sel]
     return rules
@@ -352,6 +355,11 @@ def convert(rec, ctx, scope_id, overrides=None):
                 link_attr += ' target="_blank" rel="noopener"'
         if typ == 'text':
             body = ctx.text(clean_rich(inner_html(atom)), eid)
+            plain = re.sub(r'<[^>]+>', ' ', body)
+            if len(plain.strip()) >= 110:
+                attrs['class'] += ' el--para'
+                if rules[None].get('%s .%s' % (scope, cls), {}).get('text-align') == 'center':
+                    attrs['class'] += ' is-center'
             body = re.sub(r'href="([^"]*)"', lambda m: 'href="%s"' % esc(ctx.link(m.group(1))), body)
             body = body.replace(' style="color: inherit"', '')
             inner = '<%s class="a"%s>%s</%s>' % (tag, link_attr, body, tag)
@@ -403,6 +411,14 @@ def convert(rec, ctx, scope_id, overrides=None):
         zattrs['class'] += ' z--visible'
     html = '<section%s>\n<div class="z__bg"></div><div class="z__filter"></div>\n%s\n</section>' % (
         attrs_html(zattrs), '\n'.join(parts))
+    # The 480 px layout of the original project was never finished (elements pile up even in
+    # English); the phone layout the designer did make is used for every screen below 640 px.
+    # (phones keep exactly their cascade: 480-layer values overridden by the 320-layer ones)
+    merged = rules.get('max-width:639px', OrderedDict())
+    for sel, decls in rules.pop('max-width:479px', OrderedDict()).items():
+        merged.setdefault(sel, OrderedDict()).update(decls)
+    rules['max-width:639px'] = merged
+    rules['max-width:479px'] = OrderedDict()
     css = css_text(rules) + ('\n' + '\n'.join(extra_css) if extra_css else '')
     leftovers = set(re.findall(r'(t396[\w-]*|tn-[\w-]+)', css))
     if leftovers:

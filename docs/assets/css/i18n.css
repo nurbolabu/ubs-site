@@ -1,3 +1,16 @@
 /* Per-language size/position adjustments for longer RU/KK texts. */
-@media (max-width:959px){html[lang="ru"] #s400963 .e10 .a,html[lang="ru"] #s400963 .e13 .a,html[lang="ru"] #s400963 .e14 .a{font-size:30px}}@media (max-width:479px){html[lang="ru"] #s400963 .e10 .a,html[lang="ru"] #s400963 .e13 .a,html[lang="ru"] #s400963 .e14 .a{font-size:23px}}
-@media (max-width:959px){html[lang="kk"] #s400963 .e10 .a,html[lang="kk"] #s400963 .e13 .a,html[lang="kk"] #s400963 .e14 .a{font-size:30px}}@media (max-width:479px){html[lang="kk"] #s400963 .e10 .a,html[lang="kk"] #s400963 .e13 .a,html[lang="kk"] #s400963 .e14 .a{font-size:23px}}
+@media (max-width:959px){html[lang="ru"] #s400963 .e10 .a,html[lang="ru"] #s400963 .e13 .a,html[lang="ru"] #s400963 .e14 .a{font-size:30px}}@media (max-width:639px){html[lang="ru"] #s400963 .e10 .a,html[lang="ru"] #s400963 .e13 .a,html[lang="ru"] #s400963 .e14 .a{font-size:23px}}
+@media (max-width:959px){html[lang="kk"] #s400963 .e10 .a,html[lang="kk"] #s400963 .e13 .a,html[lang="kk"] #s400963 .e14 .a{font-size:30px}}@media (max-width:639px){html[lang="kk"] #s400963 .e10 .a,html[lang="kk"] #s400963 .e13 .a,html[lang="kk"] #s400963 .e14 .a{font-size:23px}}
+/* Why-us number marks above titles below 1200 px (every language) */
+@media (max-width:1199px){#s072903 .e9{top:calc(544px - 24px);left:calc(50% - 480px + 90px)}}
+@media (max-width:1199px){#s072903 .e12{top:calc(351px - 24px);left:calc(50% - 480px + 650px)}}
+@media (max-width:1199px){#s072903 .e15{top:calc(762px - 24px);left:calc(50% - 480px + 537px)}}
+@media (max-width:1199px){#s072903 .e18{top:calc(1015px - 24px);left:calc(50% - 480px + 152px)}}
+@media (max-width:959px){#s072903 .e9{top:calc(283px - 24px);left:calc(50% - 320px + 90px)}}
+@media (max-width:959px){#s072903 .e12{top:calc(837px - 24px);left:calc(50% - 320px + 62px)}}
+@media (max-width:959px){#s072903 .e15{top:calc(608px - 24px);left:calc(50% - 320px + 342px)}}
+@media (max-width:959px){#s072903 .e18{top:calc(981px - 24px);left:calc(50% - 320px + 378px)}}
+@media (max-width:639px){#s072903 .e9{top:calc(220px - 24px);left:calc(50% - 160px + 60px)}}
+@media (max-width:639px){#s072903 .e12{top:calc(910px - 24px);left:calc(50% - 160px + 60px)}}
+@media (max-width:639px){#s072903 .e15{top:calc(567px - 24px);left:calc(50% - 160px + 60px)}}
+@media (max-width:639px){#s072903 .e18{top:calc(1244px - 24px);left:calc(50% - 160px + 60px)}}

@@ -76,3 +76,6 @@ body{animation:page-in .4s ease-out both}
 }
 html{scroll-behavior:smooth}
 .el .a a{color:inherit;text-decoration:none}
+/* no sideways scrolling from decorative circles that leave the screen */
+html,body{overflow-x:hidden}
+@supports (overflow:clip){html,body{overflow-x:clip}}

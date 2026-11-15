@@ -367,6 +367,8 @@ def main():
     with open(os.path.join(DOCS, 'assets/css/i18n.css'), 'w', encoding='utf8') as f:
         f.write('/* Per-language size/position adjustments for longer RU/KK texts. */\n')
         f.write(css_finalize('\n'.join(lang_css.values())) + '\n')
+        f.write('/* Why-us number marks above titles below 1200 px (every language) */\n')
+        f.write(css_finalize(edits.all_lang_css()) + '\n')
     for page in built:
         write_page(page, ['base.css', 'site.css', 'blocks.css', 'page-%s.css' % page.slug, 'i18n.css'])
     write_extras()

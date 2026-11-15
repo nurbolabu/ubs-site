@@ -271,3 +271,18 @@ header.z .el--button .btn__t{white-space:nowrap}
 header.z .el--button .a{overflow:visible}
 /* Small laptops / tablets landscape: the logo no longer runs into the menu */
 @media (min-width:960px) and (max-width:1199px){header.z .el--logo{width:160px!important}}
+
+/* Footer, client edits (Oct 2026): no "Pages" title, bold page names lifted and nudged left */
+.footer__col--pages{justify-self:start;margin-left:-20px}
+.footer__list--pages{margin-top:0}
+.footer__list--pages li{margin-bottom:12px;font-weight:600}
+.footer__list--pages li:last-child{margin-bottom:0}
+@media (max-width:959px){.footer__col--pages{margin-left:0}}
+
+/* Paragraphs are justified (client request) */
+.el--para .a,.values__text,.clients__descr,.svc__p,.svc__result,.svc-card__text,.tiles__descr{text-align:justify}
+.el--para.is-center .a{text-align-last:center}
+/* long Russian / Kazakh words: hyphenate so justified lines keep even spacing */
+html[lang="ru"] .el--para .a,html[lang="kk"] .el--para .a,
+html[lang="ru"] :is(.values__text,.clients__descr,.svc__p,.svc__result,.svc-card__text,.tiles__descr),
+html[lang="kk"] :is(.values__text,.clients__descr,.svc__p,.svc__result,.svc-card__text,.tiles__descr){-webkit-hyphens:auto;hyphens:auto}

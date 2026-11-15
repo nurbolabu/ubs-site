@@ -179,15 +179,17 @@ def service_hero(page, html, css, scope):
     sec.append(card)
     rules = []
     for media, decl in geo:
-        if media and ('959' in media or '639' in media):
+        if media and '959' in media:
             continue  # tablets get their own layout below (the original had none)
+        if media and '479' in media:
+            media = media.replace('479', '639')  # phone layout serves every screen below 640 px
         b = ';'.join('%s:%s' % (k, 'auto' if k == 'height' else v) for k, v in decl.items())
         if 'height' in decl:
             b += ';min-height:%s' % decl['height']
         r = '%s .svc-card{%s}' % (scope, b)
         rules.append('%s{%s}' % (media, r) if media else r)
     img = [c for c in sec.select_one('.el')['class'] if re.fullmatch(r'e\d+', c)][0]
-    for mq, h, top, w in (('max-width:959px', 620, 160, 600), ('max-width:639px', 640, 140, 460)):
+    for mq, h, top, w in (('min-width:640px) and (max-width:959px', 620, 160, 600),):
         rules.append('@media (%s){%s{height:%dpx}%s .%s{top:0;height:%dpx}'
                      '%s .svc-card{top:%dpx;left:calc(50%% - %dpx);width:%dpx;min-height:0}}' % (
                          mq, scope, h, scope, img, h, scope, top, w // 2, w))

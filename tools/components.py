@@ -148,18 +148,17 @@ def footer(page):
 <ul class="footer__list">
 <li><a href="{PHONE_HREF}">{PHONE}</a></li>
 <li><a href="mailto:{EMAIL}">{EMAIL}</a></li>
-<li>{page.t('Almaty, st. Gogolya 86, 801')}</li>
+<li>{page.t('Almaty, 050000<br>86 Gogol St.<br>Office (800–806)')}</li>
 </ul>
 </div>
 <div class="footer__col">
-<h2 class="footer__title">{page.t('work schedule')}</h2>
+<h2 class="footer__title">{page.t('Working hours')}</h2>
 <p class="footer__text">{page.t('Monday – Friday')}<br>{page.t('9:00 AM – 6:00 PM')}</p>
 <p class="footer__text footer__text--gap">{page.t('Saturday – Sunday: Closed')}</p>
 </div>
-<div class="footer__col">
-<h2 class="footer__title">{page.t('PAGES')}</h2>
-<ul class="footer__list">{pages}</ul>
-</div>
+<nav class="footer__col footer__col--pages" aria-label="{page.t('PAGES')}">
+<ul class="footer__list footer__list--pages">{pages}</ul>
+</nav>
 </div>
 </footer>'''
 
@@ -211,7 +210,7 @@ def contact_map(page, rec):
 <div class="contact__map" data-map-src="{src}" data-map-title="{page.t('UBS office on the map')}"></div>
 <div class="contact__card">
 <h1 class="contact__title grad-title">{page.t('Contact us')}</h1>
-<p class="contact__text"><a href="{PHONE_HREF}">{PHONE}</a><br>{landline}<a href="mailto:{EMAIL}">{EMAIL}</a><br>{page.t('Almaty, st. Gogolya 86, 801')}</p>
+<p class="contact__text"><a href="{PHONE_HREF}">{PHONE}</a><br>{landline}<a href="mailto:{EMAIL}">{EMAIL}</a><br>{page.t('Almaty, 050000, 86 Gogol St.,<br>Office (800–806)')}</p>
 {social(30, '#00a0e3', 'social social--contact')}
 </div>
 </section>'''

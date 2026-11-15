@@ -482,9 +482,11 @@
     content.sort(function (a, b) { return a.top - b.top; });
     function sameRow(a, b) {
       var ix = Math.min(a.left + a.w, b.left + b.w) - Math.max(a.left, b.left);
-      var iy = Math.min(a.top + a.h, b.top + b.h) - Math.max(a.top, b.top);
-      if (ix > 0 && iy > 0 && ix * iy >= 0.5 * Math.min(a.w * a.h, b.w * b.h)) return true; // stacked badge
-      if (Math.abs(a.top - b.top) > 14 && Math.abs(a.top + a.h / 2 - b.top - b.h / 2) > 14) return false;
+      var ah = a.h - a.grow, bh = b.h - b.grow; // compare the design (English) boxes
+      var iy = Math.min(a.top + ah, b.top + bh) - Math.max(a.top, b.top);
+      var small = Math.min(a.w * ah, b.w * bh), big = Math.max(a.w * ah, b.w * bh);
+      if (ix > 0 && iy > 0 && ix * iy >= 0.5 * small && small >= 0.25 * big) return true; // stacked badge
+      if (Math.abs(a.top - b.top) > 14 && Math.abs(a.top + ah / 2 - b.top - bh / 2) > 14) return false;
       var gap = Math.max(a.left, b.left) - Math.min(a.left + a.w, b.left + b.w);
       return gap < 120;
     }
@@ -501,7 +503,7 @@
           var ov = Math.min(a.left + a.w, b.left + b.w) - Math.max(a.left, b.left);
           if (ov < 10) continue;
           shift = Math.max(shift, a.shift + a.grow);
-          if (fixOverlap && b.top >= a.top + (a.h - a.grow) * 0.5) {
+          if (fixOverlap && b.top >= a.top + Math.min((a.h - a.grow) * 0.5, 40)) {
             shift = Math.max(shift, a.top + a.h + a.shift + 6 - b.top);
           }
         }
@@ -513,7 +515,8 @@
     });
     var extra = 0;
     content.forEach(function (c) { if (c.shift || c.grow) extra = Math.max(extra, c.shift + c.grow); });
-    if (!moved && !extra) return;
+    var overflow = content.some(function (c) { return c.top + c.h > H - 8; });
+    if (!moved && !extra && !overflow) return;
     // glass panels and backgrounds that hold the moved content grow with it
     items.filter(function (i) {
       if (i.content || i.w >= W * 0.98) return false;
@@ -535,17 +538,80 @@
     content.forEach(function (c) {
       if (c.top + c.h - c.grow >= bottom - 40) need = Math.max(need, c.shift + c.grow);
     });
-    if (need > 0) sec.style.height = (H + need) + 'px';
+    // nothing may end below the section (it would be cut off): grow it, and its backgrounds
+    var maxBottom = 0;
+    content.forEach(function (c) { maxBottom = Math.max(maxBottom, c.top + c.h + c.shift); });
+    var newH = Math.max(H + need, maxBottom > H - 8 ? maxBottom + 32 : 0);
+    if (newH > H) {
+      sec.style.height = newH + 'px';
+      items.forEach(function (i) {
+        if (!i.content && i.h >= H * 0.9 && i.top <= 2) { i.e.style.height = (i.h + newH - H) + 'px'; i.e._fh = 1; }
+      });
+    }
+  }
+
+  /* Longer RU / KK headings: shrink a text that runs off the screen or into its neighbour */
+  function fitTexts(sec) {
+    var W = sec.offsetWidth;
+    var els = Array.prototype.filter.call(sec.children, function (e) {
+      return e.classList.contains('el') && e.offsetParent !== null;
+    });
+    els.filter(function (e) { return e.classList.contains('el--text'); }).forEach(function (e) {
+      var a = e.querySelector('.a');
+      if (!a) return;
+      a.style.fontSize = '';
+      var base = parseFloat(getComputedStyle(a).fontSize);
+      if (base < 18) return; // body text wraps by itself
+      var slide = e.className.match(/st-slide-\d+/);
+      function bad() {
+        var l = e.offsetLeft, r = l + Math.max(e.offsetWidth, a.scrollWidth), t = e.offsetTop, b = t + e.offsetHeight;
+        if (r > W - 4 || a.scrollWidth > e.clientWidth + 2) return true;
+        return els.some(function (o) {
+          if (o === e || o.offsetLeft <= l + 10 || !/el--(text|button|image)/.test(o.className)) return false;
+          var os = o.className.match(/st-slide-\d+/);
+          if (slide && os && os[0] !== slide[0]) return false;
+          var ot = o.offsetTop, ob = ot + o.offsetHeight;
+          return ot < b - 4 && ob > t + 4 && r > o.offsetLeft - 4;
+        });
+      }
+      var size = base;
+      while (bad() && size > base * 0.6) {
+        size = Math.round(size * 0.94 * 10) / 10;
+        a.style.fontSize = size + 'px';
+      }
+    });
   }
 
   function initReflow() {
     var secs = $$('section.z');
     var t;
-    function run() { secs.forEach(reflowSection); }
+    function run() {
+      if (docLang !== 'en') secs.forEach(fitTexts);
+      secs.forEach(reflowSection);
+    }
     run();
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(run);
-    window.addEventListener('load', run);
+    window.addEventListener('load', function () { run(); setTimeout(run, 400); setTimeout(run, 1500); });
+    if (document.fonts && document.fonts.addEventListener) {
+      document.fonts.addEventListener('loadingdone', function () { clearTimeout(t); t = setTimeout(run, 60); });
+    }
     window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(run, 150); });
+    // any late change of a text box (font swap, hyphenation, zoom) re-runs the layout pass
+    if ('ResizeObserver' in window) {
+      var sizes = new WeakMap();
+      var ro = new ResizeObserver(function (entries) {
+        var changed = entries.some(function (en) {
+          var h = Math.round(en.contentRect.height), w = Math.round(en.contentRect.width);
+          var old = sizes.get(en.target);
+          sizes.set(en.target, w + 'x' + h);
+          return old !== undefined && old !== w + 'x' + h;
+        });
+        if (changed) { clearTimeout(t); t = setTimeout(run, 80); }
+      });
+      secs.forEach(function (sec) {
+        Array.prototype.forEach.call(sec.querySelectorAll(':scope > .el--text'), function (e) { ro.observe(e); });
+      });
+    }
   }
 
   function init() {

@@ -47,6 +47,9 @@ REPLACE = {
     # Information security page: no "32+" claim
     'Protecting your enterprise data is a top priority for our 32+ specialized professionals. Operating from Almaty, Astana, and Atyrau, our experts integrate robust security protocols into your systems, ensuring your business data remains secure, compliant, and continuously monitored against vulnerabilities.':
         'Protecting your enterprise data is a top priority for our specialists. Operating from Almaty, Astana, and Atyrau, our experts integrate robust security protocols into your systems, ensuring your business data remains secure, compliant, and continuously monitored against vulnerabilities.',
+    # About: one long block split into paragraphs (client: "clear paragraphs")
+    'Since its establishment in 1996, UBS Establishment has aimed to be more than just a technology supplier—it strives to be a strategic and reliable partner in the digital transformation journey of its clients. The company has grown steadily thanks to its commitment to quality and professionalism, along with strong partnerships with the world’s leading IT manufacturers. On this page, you’ll discover our company history, vision, values, and the dedicated teams behind our success—along with detailed information about our branches and long-standing experience serving key sectors across Kazakhstan.':
+        'Since its establishment in 1996, UBS Establishment has aimed to be more than just a technology supplier—it strives to be a strategic and reliable partner in the digital transformation journey of its clients.<br><br>The company has grown steadily thanks to its commitment to quality and professionalism, along with strong partnerships with the world’s leading IT manufacturers.<br><br>On this page, you’ll discover our company history, vision, values, and the dedicated teams behind our success—along with detailed information about our branches and long-standing experience serving key sectors across Kazakhstan.',
     # Partners page
     'Our Certified Partners Include:': 'Our Partners Include:',
     'Official HP Amplify Member': 'HP Amplify Synergy Partner',
@@ -134,7 +137,7 @@ def founder_photo(page, html, css, scope):
 def _hero_fix(scope):
     # Tilda kept 1585/1405/1275 px tall placeholders on tablets: give the cover image a sane height
     out = []
-    for mq, h in (('max-width:1199px', 480), ('max-width:959px', 420), ('max-width:639px', 360)):
+    for mq, h in (('max-width:1199px', 480), ('min-width:640px) and (max-width:959px', 420)):
         out.append('@media (%s){%s{height:%dpx}%s .e1{top:0;height:%dpx}}' % (mq, scope, h, scope, h))
     return '\n'.join(out)
 
@@ -151,7 +154,7 @@ def extra_css(slug):
 
 
 _HERO_SMALL = ('@media (max-width:959px){#s400963 .e10 .a,#s400963 .e13 .a,#s400963 .e14 .a{font-size:30px}}'
-               '@media (max-width:479px){#s400963 .e10 .a,#s400963 .e13 .a,#s400963 .e14 .a{font-size:23px}}')
+               '@media (max-width:639px){#s400963 .e10 .a,#s400963 .e13 .a,#s400963 .e14 .a{font-size:23px}}')
 LANG_CSS = {
     # long single words in the home hero titles: smaller on phones
     'ru': _HERO_SMALL,
@@ -159,5 +162,30 @@ LANG_CSS = {
 }
 
 
+def _labels_above_titles():
+    """Why-us circles: long RU/KK words reach the [01]..[04] marks; on screens below 1200 px
+    the marks sit above their titles instead of beside them."""
+    import os
+    path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                        'docs/assets/css/page-ubs-services.css')
+    css = open(path, encoding='utf8').read()
+    out = []
+    for media, block in S._media_blocks(css):
+        if not media:
+            continue
+        for title, label in (('e7', 'e9'), ('e10', 'e12'), ('e13', 'e15'), ('e16', 'e18')):
+            m = re.search(r'#s072903 \.%s\{([^}]*)\}' % title, block)
+            if not m:
+                continue
+            d = dict(re.findall(r'(?<![-\w])(top|left):([^;]+)', m.group(1)))
+            if 'top' in d and 'left' in d:
+                out.append('%s{#s072903 .%s{top:calc(%s - 24px);left:%s}}' % (media, label, d['top'], d['left']))
+    return '\n'.join(out)
+
+
 def lang_css(lang):
     return LANG_CSS.get(lang, '').replace('#s', 'html[lang="%s"] #s' % lang)
+
+
+def all_lang_css():
+    return _labels_above_titles()
