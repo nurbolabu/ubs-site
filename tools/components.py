@@ -6,9 +6,10 @@ Texts go through page.t() so they are translated per language.
 """
 import re
 
-PHONE = '+7 771 799 98 72'
-PHONE_HREF = 'tel:+77717999872'
-EMAIL = 'info@ubsystem.kz'
+PHONE = '8 (727) 250 34 34'
+PHONE_HREF = 'tel:+77272503434'
+EMAIL = 'ubs@ubsystem.kz'
+# WhatsApp stays on the mobile number: a landline has no WhatsApp
 WHATSAPP = 'https://wa.me/77717999872'
 LINKEDIN = 'https://kz.linkedin.com/company/universal-business-systems-establishment'
 LOGO = '@/assets/img/37646362-3462Mask_group.png'

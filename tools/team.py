@@ -30,7 +30,7 @@ TEAM = [
     {
         'id': 'samer-abu-laban', 'photo': 'samer-abu-laban.jpg',
         'name': {'en': 'Samer Abu-Laban', 'ru': 'Самер Абу-Лабан', 'kk': 'Самер Абу-Лабан'},
-        'role': {'en': 'Site Division Manager', 'ru': 'Руководитель направления', 'kk': 'Бағыт жетекшісі'},
+        'role': {'en': 'Site Division Manager', 'ru': 'Менеджер по инженерной модернизации проектов', 'kk': 'Жобаларды инженерлік жаңғырту жөніндегі менеджер'},
         'text': {
             'en': '“At UBS, I found a supportive environment and real opportunities for professional growth, alongside a collaborative team and positive atmosphere.”',
             'ru': '«В UBS я нашёл поддерживающую среду и реальные возможности для профессионального роста, а также сплочённую команду и позитивную атмосферу».',

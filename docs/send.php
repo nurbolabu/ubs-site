@@ -6,8 +6,8 @@
  */
 declare(strict_types=1);
 
-const MAIL_TO   = 'info@ubsystem.kz';          // recipient(s), comma separated
-const MAIL_FROM = 'no-reply@ubsystem.kz';      // must be a mailbox of the site's domain on hoster.kz
+const MAIL_TO   = 'ubs@ubsystem.kz';           // recipient(s), comma separated
+const MAIL_FROM = 'ubs@ubsystem.kz';           // must be a real mailbox of ubsystem.kz on the same hosting
 const SITE_NAME = 'UBS website';
 
 header('Content-Type: application/json; charset=utf-8');

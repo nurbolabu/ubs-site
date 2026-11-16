@@ -8,9 +8,9 @@
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var docLang = document.documentElement.lang || 'en';
   var T = {
-    en: { sent: 'Thank you! We will contact you shortly.', error: 'Sending failed. Please try again or write to info@ubsystem.kz', required: 'Please fill in this field', email: 'Please enter a valid email' },
-    ru: { sent: 'Спасибо! Мы скоро свяжемся с вами.', error: 'Не удалось отправить. Попробуйте ещё раз или напишите на info@ubsystem.kz', required: 'Заполните это поле', email: 'Укажите корректный email' },
-    kk: { sent: 'Рақмет! Біз сізбен жақын арада хабарласамыз.', error: 'Жіберу мүмкін болмады. Қайталап көріңіз немесе info@ubsystem.kz поштасына жазыңыз', required: 'Осы өрісті толтырыңыз', email: 'Дұрыс email енгізіңіз' }
+    en: { sent: 'Thank you! We will contact you shortly.', error: 'Sending failed. Please try again or write to ubs@ubsystem.kz', required: 'Please fill in this field', email: 'Please enter a valid email' },
+    ru: { sent: 'Спасибо! Мы скоро свяжемся с вами.', error: 'Не удалось отправить. Попробуйте ещё раз или напишите на ubs@ubsystem.kz', required: 'Заполните это поле', email: 'Укажите корректный email' },
+    kk: { sent: 'Рақмет! Біз сізбен жақын арада хабарласамыз.', error: 'Жіберу мүмкін болмады. Қайталап көріңіз немесе ubs@ubsystem.kz поштасына жазыңыз', required: 'Осы өрісті толтырыңыз', email: 'Дұрыс email енгізіңіз' }
   }[docLang] || {};
 
   function screenRes() {
