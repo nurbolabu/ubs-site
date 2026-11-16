@@ -283,6 +283,7 @@ def clients(page, rec):
 LANDLINE = None  # e.g. ('+7 727 000 00 00', 'tel:+77270000000')
 TEAM = [
     {'name': 'Rula Haddad', 'role': 'General Director', 'phone': None, 'email': None},
+    {'name': 'Samer Abu-Laban', 'role': 'Site Division Manager', 'phone': None, 'email': None},
     {'name': 'Yevgeniy Zaitsev', 'role': 'Business Development Manager', 'phone': None, 'email': None},
     {'name': 'Olesya Neb', 'role': 'Sales Manager, 1st Category', 'phone': None, 'email': None},
     {'name': 'Nelya Saidova', 'role': 'Sales Manager', 'phone': None, 'email': None},
