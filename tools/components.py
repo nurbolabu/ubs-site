@@ -78,10 +78,10 @@ def burger(page):
 
 
 def popup(page):
-    fields = [('company', 'text', 'Company name', False, 'organization'),
-              ('email', 'email', 'Email', True, 'email'),
-              ('name', 'text', 'Name', True, 'name'),
-              ('phone', 'tel', 'Phone', True, 'tel')]
+    fields = [('name', 'text', 'Name', True, 'name'),
+              ('company', 'text', 'Company name', False, 'organization'),
+              ('phone', 'tel', 'Phone', True, 'tel'),
+              ('email', 'email', 'Email', True, 'email')]
     inputs = ''.join(
         '<label class="popup__field"><span class="visually-hidden">%s</span>'
         '<input class="zf__input popup__input" type="%s" name="%s" placeholder="%s" autocomplete="%s"%s></label>' % (
@@ -91,15 +91,17 @@ def popup(page):
 <button type="button" class="popup__close" data-popup-close aria-label="{page.t('Close')}"><svg width="23" height="23" viewBox="0 0 23 23" aria-hidden="true"><path d="M.9.9l21.2 21.2M22.1.9L.9 22.1" stroke="currentColor" stroke-width="2"/></svg></button>
 <div class="popup__wrap">
 <div class="popup__box">
+<div class="popup__inner">
 <h2 class="popup__title" id="popup-title">{page.t('Request for a consultation')}</h2>
 <p class="popup__descr">{page.t('Simply enter your contact details, and we will get in touch with you.')}</p>
 <form class="zf js-form popup__form" action="send.php" method="post" novalidate>
 <input type="hidden" name="form" value="popup">
 {inputs}
 <input type="text" name="website" class="zf__hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-<button type="submit" class="zf__btn popup__submit"><span class="icon-arrow" aria-hidden="true"></span>{page.t('Submit')}</button>
+<button type="submit" class="zf__btn popup__submit">{page.t('Submit')}</button>
 <p class="zf__msg popup__msg" role="status" aria-live="polite"></p>
 </form>
+</div>
 </div>
 </div>
 </div>'''
